@@ -1,4 +1,16 @@
 #include "facility.h"
 
-void Facility::seize(Process &p) {}
-void Facility::release(Process &p) {}
+Facility::Facility() {
+	empty = true;
+}
+void Facility::seize(Process &p) {
+	if(empty)
+		p.Behavior();
+}
+void Facility::release(Process &p) {
+	if(!qu.empty())
+		qu.pop().Behavior;
+	else
+		empty = true;
+	p.Behavior;
+}
