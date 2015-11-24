@@ -97,8 +97,6 @@ public:
 	PtrMethod ptrMethod;
 	string name;
 public:
-//	explicit Process();
-
 	void Seize(Facility &f, PtrMethod nextMethod);
 
 	void ActivateAfter(double interval, PtrMethod nextMethod);
@@ -134,20 +132,16 @@ void Process::ActivateAfter(double interval, PtrMethod nextMethod)
 //..............................................................................  ZAKAZNIK.cpp
 class Zakaznik : public Process {
 public:
-	using Process::Process;
-	void Start();
-	void End();
-	void PokladnaRelease();
-	void PokladnaRun();
+	Zakaznik() { PokladnaSeize(); }
+
 	void PokladnaSeize();
+	void PokladnaRun();
+	void PokladnaRelease();
+	void End();
+
 };
 
 // Toto treba dat aby definoval uzivatel cez dedenie
-
-void Zakaznik::Start()
-{
-	this->PokladnaSeize();
-}
 
 void Zakaznik::End()
 {
@@ -281,7 +275,7 @@ int main()
 //	pro6.Start(&Process::PokladnaSeize, "pro6");
 //	pro7.Start(&Process::PokladnaSeize, "pro7");
 
-	(new Zakaznik)->Start();
+	Zakaznik zak1;
 //zak1.Start();
 //zak1.Start(&Zakaznik::PokladnaSeize, "zak1");
 
