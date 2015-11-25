@@ -2,6 +2,7 @@
 
 // TODO: Put somewhere else
 Calendar calendar;
+double Time_t = 0;
 
 bool Calendar::Empty()
 {

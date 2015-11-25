@@ -15,4 +15,6 @@ typedef std::function<void(void)> PtrMethod;
 
 extern double Time_t;
 
+#define DoAfter(method_name) [=](void) { (method_name)(); }
+
 #endif //SIMLITE_SHARED_H
