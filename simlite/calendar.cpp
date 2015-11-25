@@ -1,26 +1,33 @@
 #include "calendar.h"
-#include <stdio.h>
+
+// TODO: Put somewhere else
+Calendar calendar;
+
+bool Calendar::Empty()
+{
+    return events.size()==0?true:false;
+}
 void Calendar::add(Event event)
 {
-	events.push(event);
+    events.push(event);
 }
 
 void Calendar::dump()
 {
-	int size = events.size();
-	for (int i = 0; i < size; ++i)
+    int size = events.size();
+    for (int i = 0; i < size; ++i)
     {
-        std::cout<<events.top().at<<" "<<events.top().priority;
+        std::cout << events.top().at << " " << events.top().priority;
         printf(" %p\n", events.top().process);
         events.pop();
     }
 }
-// bool operator<(const node& a, const node& b) {
-
-//     node temp1=a,temp2=b;
-//     if(a.age != b.age)
-//         return a.age > b.age;
-//     else{
-//         return temp1.name.append(temp2.name) > temp2.name.append(temp1.name);
-//     }
-// }
+void Calendar::CallNext()
+{
+    if (events.size() > 0)
+    {
+        Time_t = events.top().at;
+        events.top().process->ActivateNext();
+        events.pop();
+    }
+}

@@ -1,43 +1,52 @@
 #include <simlite.h>
 
+#define DoAfter(piece_of_code) [=](void) { piece_of_code; }
+
 Facility pokladna;
+double Time_t = 0;
 
-class Zakaznik : Process {
-    int state = 0;
-
+class Zakaznik : public Process {
 public:
+    Zakaznik() { PokladnaSeize(); }
 
-    void Behavior() {
-        switch(state) {
-            case 0:
-                Seize(pokladna);
-
-                break;
-            case 1:
-                ActivateAfter(Exp(3));
-
-                break;
-            case 2:
-                Release(pokladna);
-                break;
-        }
-        state++;
-    }
+    void PokladnaSeize();
+    void PokladnaRun();
+    void PokladnaRelease();
+    void End();
 
 };
 
+void Zakaznik::PokladnaSeize()
+{
+    // Zakaznik sa snazi obsadit pokladnu
+    Seize(pokladna, DoAfter(PokladnaRun()));
+}
+
+void Zakaznik::PokladnaRun()
+{
+    // Zakaznikovi sa podarilo uspesne obsadit pokladnu
+    // Zostava vo facility po nejaku dobu
+    std::cout << "V case " << Time_t << " " << name << " obsadil pokladnu na 15 min\n";
+    ActivateAfter(15, [=](void) { this->PokladnaRelease(); }); // uvolnim zariadenie po 15 jednotkach casu
+}
+
+void Zakaznik::PokladnaRelease()
+{
+    // Skoncila obsluha pokladnou, zakaznik ide von
+    Release(pokladna, [=](void) { this->End(); });
+}
+
+void Zakaznik::End()
+{
+    // Zakaznik ide von zo systemu
+    std::cout << "V case " << Time_t << " " << name << " skoncil\n";
+}
+
 int main() {
-    Calendar calendar;
-    calendar.add(Event(0, 1, NULL));
-    calendar.add(Event(2, 1, NULL));
-    calendar.add(Event(2, 2, NULL));
-    calendar.add(Event(2, 3, (Process*)1));
-    calendar.add(Event(2, 3, (Process*)2));
-    calendar.add(Event(2, 3, (Process*)3));
-    calendar.add(Event(2, 3, (Process*)4));
-    calendar.add(Event(1, 1, NULL));
 
-    calendar.dump();
-    return 0;
+    Zakaznik zak1;
 
+    while(!calendar.Empty())
+        calendar.CallNext();
+    pokladna.Output();
 }

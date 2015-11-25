@@ -1,6 +1,5 @@
 #include "shared.h"
 
-
 #ifndef SIMLITE_EVENT_H
 #define SIMLITE_EVENT_H
 
@@ -16,10 +15,10 @@ public:
 	int priority;
 	Process *process;
 public:
-	Event(double _at, int _priority, Process *_process);
+	Event(double at, int priority, Process *process);
+
 };
 
 bool operator<(const Event &a, const Event &b);
-
 
 #endif //SIMLITE_EVENT_H

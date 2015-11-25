@@ -1,18 +1,29 @@
+#include "shared.h"
+
 #ifndef SIMLITE_FACILITY_H
 #define SIMLITE_FACILITY_H
 
-class Process;
+#include "process.h"
+
+typedef struct {
+	Process *p;
+	double waitStart;
+} FacilityQuItem;
 
 class Facility {
 private:
+	double emptyStart;
 	bool empty;
-	Facility();
-	std::queue<Process*> qu;
+	double duration_of_empty;
+	std::queue<FacilityQuItem> qu;
+	int maxQu;
 	std::vector<double> duration_of_service;
 	std::vector<double> duration_in_queue;
 public:
-    void seize(Process &p);
-    void release(Process &p);
+	void Output();
+	Facility();
+	void seize(Process &p);
+	void release();
 };
 
 #endif //SIMLITE_FACILITY_H
