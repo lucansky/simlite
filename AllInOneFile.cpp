@@ -13,13 +13,8 @@ using namespace std;
 // .................................................................   SHARED
 double Time_t = 0;
 class Process;
-//class Zakaznik;
+
 typedef std::function<void(void)> PtrMethod;
-typedef void(Process::*PtrMethodOld)();
-
-//class Zakaznik;
-//typedef void(Zakaznik::*ZakaznikPtrMethod)();
-
 
 // .................................................................   EVENT
 class Event {
@@ -35,7 +30,7 @@ public:
 	Event(double at, int priority, Process *process);
 };
 
-bool operator<(const Event &a, const Event &b);
+int Event::id_autoincrement = 0;
 
 Event::Event(double _at, int _priority, Process *_process) {
 	id = id_autoincrement++;
@@ -45,7 +40,6 @@ Event::Event(double _at, int _priority, Process *_process) {
 	process = _process;
 }
 
-int Event::id_autoincrement = 0;
 bool operator<(const Event &a, const Event &b) {
 	if (a.at == b.at)
 		if (a.priority == b.priority)
@@ -105,10 +99,6 @@ public:
 
 	void Release(Facility &f, PtrMethod nextMethod);
 };
-//
-//Process::Process() {
-//	this->Start();
-//}
 
 void Process::Seize(Facility &f, PtrMethod nextMethod) {
 	ptrMethod = nextMethod;
@@ -141,25 +131,29 @@ public:
 
 };
 
-// Toto treba dat aby definoval uzivatel cez dedenie
+void Zakaznik::PokladnaSeize()
+{
+	// Zakaznik sa snazi obsadit pokladnu
+	Seize(pokladna, [=](void) { this->PokladnaRun();});
+}
+
+void Zakaznik::PokladnaRun()
+{
+	// Zakaznikovi sa podarilo uspesne obsadit pokladnu
+	std::cout << "V case " << Time_t << " " << name << " obsadil pokladnu na 15 min\n";
+	ActivateAfter(15, [=](void) { this->PokladnaRelease();}); // uvolnim zariadenie po 10s
+}
+
+void Zakaznik::PokladnaRelease()
+{
+	// Skoncila obsluha pokladnou, zakaznik ide von
+	Release(pokladna, [=](void) { this->End();});
+}
 
 void Zakaznik::End()
 {
 	// koniec programu
 	std::cout << "V case " << Time_t << " " << name << " skoncil\n";
-}
-void Zakaznik::PokladnaRelease()
-{
-	Release(pokladna, [=](void) { this->End();});
-}
-void Zakaznik::PokladnaRun()
-{
-	std::cout << "V case " << Time_t << " " << name << " obsadil pokladnu na 15 min\n";
-	ActivateAfter(15, [=](void) { this->PokladnaRelease();}); // uvolnim zariadenie po 10s
-}
-void Zakaznik::PokladnaSeize()
-{
-	Seize(pokladna, [=](void) { this->PokladnaRun();});
 }
 
 
@@ -170,6 +164,7 @@ Facility::Facility() {
 	emptyStart = Time_t;
 	maxQu = 0;
 }
+
 void Facility::seize(Process &p) {
 	if (empty == true)
 	{
@@ -258,32 +253,14 @@ void Calendar::CallNext()
 
 int main()
 {
-//	Process pro1;
-//	Process pro2;
-//	Process pro3;
-//	Process pro4;
-//	Process pro5;
-//	Process pro6;
-//	Process pro7;
-//
-//	// Todo Generator
-//	pro1.Start(&Process::PokladnaSeize, "pro1");
-//	pro2.Start(&Process::PokladnaSeize, "pro2");
-//	pro3.Start(&Process::PokladnaSeize, "pro3");
-//	pro4.Start(&Process::PokladnaSeize, "pro4");
-//	pro5.Start(&Process::PokladnaSeize, "pro5");
-//	pro6.Start(&Process::PokladnaSeize, "pro6");
-//	pro7.Start(&Process::PokladnaSeize, "pro7");
+	// TODO: Generator
 
 	Zakaznik zak1;
-//zak1.Start();
-//zak1.Start(&Zakaznik::PokladnaSeize, "zak1");
 
 	while(!calendar.Empty())
 		calendar.CallNext();
 	pokladna.Output();
-	//int i;
-	//scanf("%d", &i);
+
 	return 0;
 }
 
