@@ -1,45 +1,61 @@
 #include "facility.h"
 
 Facility::Facility() {
-	empty = true;
-	emptyStart = Time_t;
-	maxQu = 0;
+	// save for Output
+		empty = true;
+		eventStart = Time_t;
+		maxQu = 0;
+	// End save for Output
 }
 
 void Facility::seize(Process &p) {
 	if (empty == true)
 	{
-		duration_of_empty += Time_t - emptyStart;
+		// save for Output
+			empty = false;
+			duration_of_empty += Time_t - eventStart;
+			eventStart = Time_t;
+		// End save for Output
+
 		duration_in_queue.push_back(0);
 		p.ActivateNext();
-		empty = false;
 	}
 	else
 	{
 		qu.push(FacilityQuItem{ &p, Time_t });
-		if (maxQu < qu.size())
-			maxQu = qu.size();
+
+		// save for Output
+			if (maxQu < qu.size())
+				maxQu = qu.size();
+		// End save for Output
 	}
 }
+
 void Facility::release() {
-	duration_of_service.push_back(Time_t - emptyStart);
+	duration_of_service.push_back(Time_t - eventStart);
 	if (!qu.empty())
 	{
+		// save for Output
+			eventStart = Time_t;
+			duration_in_queue.push_back(Time_t - qu.front().waitStart);
+		// End save for Output
+
 		qu.front().p->ActivateNext();
-		duration_in_queue.push_back(Time_t - qu.front().waitStart);
-		emptyStart = Time_t;
 		qu.pop();
 	}
 	else
 	{
-		empty = true;
-		emptyStart = Time_t;
+		// save for Output
+			empty = true;
+			eventStart = Time_t;
+		// End save for Output
 	}
 }
+
 void Facility::Output() {
 	if (empty)
 	{
-		duration_of_empty += Time_t - emptyStart;
+		duration_of_empty += Time_t - eventStart;
 	}
 	else
 	{

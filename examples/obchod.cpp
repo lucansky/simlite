@@ -1,4 +1,4 @@
-#include <simlite.h>
+#include "../simlite/simlite.h"
 
 Facility pokladna;
 
@@ -36,8 +36,11 @@ public:
 
 int main() {
     Zakaznik zak1;
+    Zakaznik zak2;
+    Zakaznik zak3;
 
-    while(!calendar.Empty())
-        calendar.CallNext();
+    Init(0, 10);
+    Run();
+
     pokladna.Output();
 }

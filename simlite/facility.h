@@ -12,7 +12,7 @@ typedef struct {
 
 class Facility {
 private:
-	double emptyStart;
+	double eventStart;
 	bool empty;
 	double duration_of_empty;
 	std::queue<FacilityQuItem> qu;
