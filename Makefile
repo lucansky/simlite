@@ -32,7 +32,7 @@ simlite.a: $(filter-out $(BIN).o, $(OBJS))
 	ar -rcs $@ $(filter-out $(BIN).o, $(OBJS))
 
 obchod: simlite.a examples/obchod.cpp
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) examples/obchod.cpp -o examples/obchod -static simlite.a
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) examples/obchod.cpp -o examples/obchod simlite.a
 
 pack:
 	-rm *.zip || true
