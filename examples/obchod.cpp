@@ -2,7 +2,6 @@
 
 Facility pokladna;
 
-
 class Zakaznik : public Process {
 public:
     Zakaznik() {
@@ -34,12 +33,45 @@ public:
 
 };
 
-int main() {
-    Zakaznik zak1;
-    Zakaznik zak2;
-    Zakaznik zak3;
 
-    Init(0, 10);
+
+// ............................................................ generator.h ...................
+class Generator : public Process{
+private:
+    double (*delayFunc)(double);
+    double funcArg;
+public:
+    //virtual void Behavior(); // potrebne aby tuto metodu definoval uzivatel
+    void Behavior();
+    Generator(double (*delayFunc)(double), double funcArg);
+    void Run();
+};
+// ............................................................ END generator.h ...................
+
+
+// priklad ako definovat Behavior generatora. Toto by mal definovat uzivatel
+void Generator::Behavior() {
+    new Zakaznik;
+}
+
+
+// ............................................................ generator.cpp ...................
+void Generator::Run() {
+    Behavior();
+    ActivateAfter(delayFunc(funcArg), DoAfter(Run)); // uvolnim zariadenie po 15 jednotkach casu
+}
+
+Generator::Generator(double (*delayFunc)(double), double funcArg) {
+    this->delayFunc = delayFunc;
+    this->funcArg = funcArg;
+    Run();
+}
+// ............................................................ END generator.cpp ...................
+
+
+int main() {
+    Init(0, 80);
+    new Generator(Exp, 20);
     Run();
 
     pokladna.Output();
