@@ -3,7 +3,12 @@
 #ifndef SIMLITE_CALENDAR_H
 #define SIMLITE_CALENDAR_H
 
+#define HIGH_PRIORITY 99
+
 #include "event.h"
+
+void Init(double timeStart, double timeTo);
+void Run();
 
 class Calendar {
 public:
