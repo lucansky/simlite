@@ -8,6 +8,7 @@
 #include <queue>          // std::priority_queue
 #include <vector>         // std::vector
 using namespace std;
+#define DEBUG true
 
 //TODO
 inline double Exp(double mean) {return 0.0;}
