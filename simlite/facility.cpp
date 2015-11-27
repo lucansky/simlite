@@ -37,24 +37,42 @@ void Facility::release() {
 	}
 }
 void Facility::Output() {
+	if (empty)
+	{
+		duration_of_empty += Time_t - emptyStart;
+	}
+	else
+	{
+		cout << "\n\033[1;31mFacility not empty!!\n";
+		if (!qu.empty())
+			cout << "And still have " << qu.size() << " Process in queue\n";
+		cout <<"\033[0m\n";
+	}
 	cout << "Maximalna fronta: " << maxQu << "\n";
-	double sum=0;
-	int count=0;
+
+	double sum=0; int count=0;
 	while (!duration_in_queue.empty())
 	{
 		count++;
 		sum += duration_in_queue.back();
 		duration_in_queue.pop_back();
 	}
-	cout << "Priemerna cas vo fronte: " << sum / count << "\n";
-	sum = 0;
-	count = 0;
+	if (count == 0)
+		cout << "Vo fronte nebol ziadny zakaznik\n";
+	else
+		cout << "Priemerna cas vo fronte: " << sum / count << "\n";
+
+	sum = 0; count = 0;
 	while (!duration_of_service.empty())
 	{
 		count++;
 		sum += duration_of_service.back();
 		duration_of_service.pop_back();
 	}
-	cout << "Priemerna dlzka obsluhy: " << sum / count << "\n";
+	if (count == 0)
+		cout << "Obsluha neobsluzila ziadneho zakaznika\n";
+	else
+		cout << "Priemerna dlzka obsluhy: " << sum / count << "\n";
+
 	cout << "Zariadenie volne: " << duration_of_empty << "\n";
 }
