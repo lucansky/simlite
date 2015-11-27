@@ -13,7 +13,8 @@ void Process::ActivateNext() {
 }
 
 void Process::Release(Facility &f, PtrMethod nextMethod) {
-    std::cout << "V case " << Time_t << " " << name << " uvolnil pokladnu\n";
+	if (DEBUG)
+	    std::cout << "V case " << Time_t << " " << name << " uvolnil pokladnu\n";
     ptrMethod = nextMethod;
     f.release();
     ActivateNext();
