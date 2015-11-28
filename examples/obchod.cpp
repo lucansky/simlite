@@ -58,19 +58,21 @@ void Generator::Behavior() {
 // ............................................................ generator.cpp ...................
 void Generator::Run() {
     Behavior();
-    ActivateAfter(delayFunc(funcArg), DoAfter(Run)); // uvolnim zariadenie po 15 jednotkach casu
+    ActivateAfter(delayFunc(funcArg), DoAfter(Run)); // spusti generator znovu za
+    //ActivateAfter(20, DoAfter(Run)); // spusti generator znovu za
 }
 
 Generator::Generator(double (*delayFunc)(double), double funcArg) {
     this->delayFunc = delayFunc;
     this->funcArg = funcArg;
-    Run();
+    ActivateAfter(delayFunc(30), DoAfter(Run)); // spusti generator znovu za
+    //Run();
 }
 // ............................................................ END generator.cpp ...................
 
 
 int main() {
-    Init(0, 80);
+    Init(0, 67);
     new Generator(Exp, 20);
     Run();
 
