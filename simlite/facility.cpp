@@ -12,23 +12,28 @@ Facility::Facility(unsigned int capacity) {
 	// End save for Output
 }
 
+void Facility::SetItemsIn(int ModifyItemsIn)
+{
+	histogramQu.push_back(HistogramQu{ Time_t - eventStart, itemsIn });
+	eventStart = Time_t;
+	itemsIn += ModifyItemsIn;
+	if (DEBUG)
+		cout << "In time: " << Time_t << " are in facaility: " << itemsIn << " items\n";
+}
+
 void Facility::seize(Process &p, unsigned int itemSize) {
 	if (capacity - itemsIn >= itemSize && quComming.empty())
 	{
-		// save for Output
-			histogramQu.push_back(HistogramQu{ Time_t - eventStart, itemsIn });
-			eventStart = Time_t;
-		// End save for Output
 
-		itemsIn += itemSize;
-		//duration_in_quComming.push(0);
+		SetItemsIn(itemSize);
+		duration_in_quComming.push_back(0);
 		p.ActivateNext();
 
 		// ak prisli zasoby tak zavolaj dalsieho do skladu na zobratie
 		if (quOutgoing.front().itemSize <= itemsIn && !quOutgoing.empty())
 		{
-			// duration_in_quOutgoing.push_back( ........ );
-			itemsIn -= quOutgoing.front().itemSize;
+			duration_in_quOutgoing.push_back( Time_t - quOutgoing.front().waitStart );
+			SetItemsIn(-quOutgoing.front().itemSize);
 			quOutgoing.front().p->ActivateNext();
 			quOutgoing.pop();
 		}
@@ -47,20 +52,17 @@ void Facility::seize(Process &p, unsigned int itemSize) {
 void Facility::release(Process &p, unsigned int itemSize) {
 	if (quOutgoing.empty() && itemsIn >= itemSize)
 	{
-		// save for Output
-			histogramQu.push_back(HistogramQu{ Time_t - eventStart, itemsIn });
-			eventStart = Time_t;
-		// End save for Output
 
-		//duration_in_quOutgoing.push_back(0);
-		itemsIn -= itemSize;
+		duration_in_quOutgoing.push_back(0);
+		SetItemsIn(-itemSize);
 		p.ActivateNext();
 
 		// ak sa uvolnilo tak zavolaj dalsieho do skladu na vlozenie
 		if (quComming.front().itemSize <= capacity - itemsIn && !quComming.empty())
 		{
-			// duration_in_quComming.push( ........ );
-			itemsIn += quComming.front().itemSize;
+			double tmp = Time_t - quComming.front().waitStart;
+			duration_in_quComming.push_back( tmp );
+			SetItemsIn(quComming.front().itemSize);
 			quComming.front().p->ActivateNext();
 			quComming.pop();
 		}
@@ -81,14 +83,12 @@ void Facility::Output() {
 
 	histogramQu.push_back(HistogramQu{ Time_t - eventStart, itemsIn });
 	if (itemsIn != 0)
-	{
-		cout << "\n\033[1;31mFacility has " << itemsIn << " items!!\n";
-		if (!quComming.empty())
-			cout << "And have " << quComming.size() << " records in quComming\n";
-		if (!quOutgoing.empty())
-			cout << "And have " << quOutgoing.size() << " records in quOutgoing\n";
-		cout <<"\033[0m\n";
-	}
+		cout << "\033[1;31mFacility has " << itemsIn << " items!!\033[0m\n";
+	if (!quComming.empty())
+		cout << "\033[1;31mFacility has " << quComming.size() << " records in quComming\033[0m\n";
+	if (!quOutgoing.empty())
+		cout << "\033[1;31mFacility has " << quOutgoing.size() << " records in quOutgoing\033[0m\n";
+
 	cout << "Max queue: In " << maxQuComming
 	   << "\n          Out " << maxQuOutgoing << "\n";
 
@@ -97,48 +97,44 @@ void Facility::Output() {
 	while (!duration_in_quComming.empty())
 	{
 		count++;
-		sum += duration_in_quComming.front();
+		sum += duration_in_quComming.back();
 		duration_in_quComming.pop_back();
 	}
 	if (count == 0)
-		cout << "Noone was in incomming queue\n";
+		cout << "No one seize facility\n";
 	else
-		cout << "Average time in incomming queue: " << sum / count << "\n";
+		cout << "Average time in incomming queue: " << sum / count << " (without transactions in queue at stop time)\n";
 
 	// imcomming queue
 	sum=0; count=0;
 	while (!duration_in_quOutgoing.empty())
 	{
 		count++;
-		sum += duration_in_quOutgoing.front();
+		sum += duration_in_quOutgoing.back();
 		duration_in_quOutgoing.pop_back();
 	}
 	if (count == 0)
-		cout << "No one was in outgoing queue\n";
+		cout << "No one release facility\n";
 	else
-		cout << "Average time in outgoing queue: " << sum / count << "\n";
+		cout << "Average time in outgoing queue: " << sum / count << " (without transactions in queue at stop time)\n";
 
-	if (capacity >= 1) // TODO asi netreba
+	sum = 0; count = 0;
+	if (histogramQu.empty())
+		cout << "No one enter facility\n";
+	else
 	{
-		sum = 0; count = 0;
-		if (histogramQu.empty())
-			cout << "No one enter facility\n";
-		else
+		unsigned int duration_of_empty = 0;
+		while (!histogramQu.empty())
 		{
-			unsigned int duration_of_empty = 0;
-			while (!histogramQu.empty())
+			if (histogramQu.back().itemsIn == 0)
+				duration_of_empty += histogramQu.back().durationTime;
+			else
 			{
-				if (histogramQu.front().itemsIn == 0)
-					duration_of_empty += histogramQu.front().durationTime;
-				else
-				{
-					sum += histogramQu.front().durationTime * histogramQu.front().itemsIn;
-				}
-				histogramQu.pop_back();
+				sum += histogramQu.back().durationTime * histogramQu.back().itemsIn;
 			}
-			cout << "Average usage of facility: " << sum /(Time_tStart - Time_t) << "\n";
-			cout << "Facility free: " << duration_of_empty << " -- " << duration_of_empty /(Time_tStart - Time_t) << "% \n"; // v percentach
+			histogramQu.pop_back();
 		}
-
+			cout << "Facility used for " << (100* sum /(Time_t - Time_tStart))/capacity << "%\n";
+		cout << "Facility was " << 100* duration_of_empty /(Time_t - Time_tStart) << "% of time free\n"; // v percentach
 	}
 }

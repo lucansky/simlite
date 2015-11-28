@@ -39,6 +39,7 @@ public:
 	Facility(unsigned int capacity = 1);
 	void seize(Process &p, unsigned int itemSize = 1);
 	void release(Process &p, unsigned int itemSize = 1);
+	void SetItemsIn(int ModifyItemsIn);
 };
 
 #endif //SIMLITE_FACILITY_H
