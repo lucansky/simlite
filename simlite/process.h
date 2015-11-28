@@ -10,13 +10,13 @@ public:
     PtrMethod ptrMethod;
     string name;
 public:
-    void Seize(Facility &f, PtrMethod nextMethod);
+    void Seize(Facility &f, PtrMethod nextMethod, unsigned int itemSize = 1);
 
     void ActivateAfter(double interval, PtrMethod nextMethod);
 
     void ActivateNext();
 
-    void Release(Facility &f, PtrMethod nextMethod);
+    void Release(Facility &f, PtrMethod nextMethod, unsigned int itemSize = 1);
 };
 
 #include "facility.h"
