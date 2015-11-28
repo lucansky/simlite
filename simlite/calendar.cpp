@@ -3,6 +3,7 @@
 // TODO: Put somewhere else
 Calendar calendar;
 double Time_t = 0;
+double Time_tStart = 0;
 
 void Init(double timeStart, double timeTo)
 {
@@ -13,6 +14,7 @@ void Init(double timeStart, double timeTo)
         exit(-1);
     }
     Time_t = timeStart;
+    Time_tStart = timeStart;
     calendar.add(Event(timeTo, HIGH_PRIORITY, NULL));
 }
 void Run()
