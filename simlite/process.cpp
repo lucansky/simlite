@@ -16,7 +16,7 @@ void Process::Release(Facility &f, PtrMethod nextMethod) {
 	if (DEBUG)
 	    std::cout << "V case " << Time_t << " " << name << " uvolnil pokladnu\n";
     ptrMethod = nextMethod;
-    f.release();
+    f.release(*this);
     ActivateNext();
 }
 
