@@ -1,9 +1,5 @@
-
-#all:
-#
-
 CXX=g++
-CXXFLAGS=-std=c++11
+CXXFLAGS=-std=c++11 -g
 LDFLAGS=-I./simlite
 
 SRCS=$(wildcard simlite/*.cpp)
@@ -35,6 +31,10 @@ obchod: simlite.a examples/obchod.cpp
 
 sklad: simlite.a examples/sklad.cpp
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) examples/sklad.cpp -o examples/sklad simlite.a
+
+histogram: simlite.a unit_tests/histogram.cpp
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) unit_tests/histogram.cpp -o unit_tests/histogram simlite.a
+
 
 pack:
 	-rm *.zip || true

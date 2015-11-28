@@ -8,6 +8,7 @@
 #include <queue>          // std::priority_queue
 #include <vector>         // std::vector
 #include <assert.h>
+#include <iomanip>        // std::setprecision(
 using namespace std;
 #define DEBUG true
 

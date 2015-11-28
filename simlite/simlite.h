@@ -5,5 +5,6 @@
 #include "process.h"
 #include "event.h"
 #include "facility.h"
+#include "histogram.h"
 
 #endif //SIMLITE_SIMLITE_H
