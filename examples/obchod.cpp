@@ -3,6 +3,8 @@
 Facility pokladna;
 
 class Zakaznik : public Process {
+private:
+    double ZakaznikTime;
 public:
     Zakaznik() {
         PokladnaSeize(); // Pociatocna metoda ktora sa naplanuje po vytvoreni Zakaznika
@@ -11,13 +13,14 @@ public:
     // Zakaznik sa snazi obsadit pokladnu
     void PokladnaSeize() {
         Seize(pokladna, DoAfter(PokladnaRun));
+        ZakaznikTime = Time_t;
     }
 
     // Zakaznikovi sa podarilo uspesne obsadit pokladnu
     // Zostava vo facility po nejaku dobu
     void PokladnaRun() {
 
-        std::cout << "V case " << Time_t << " " << name << " obsadil pokladnu na 15 min\n";
+        std::cout << "Po cakani " << Time_t - ZakaznikTime << " v case " << Time_t << " obsadil pokladnu\n";
         ActivateAfter(15, DoAfter(PokladnaRelease)); // uvolnim zariadenie po 15 jednotkach casu
     }
 
@@ -65,14 +68,14 @@ void Generator::Run() {
 Generator::Generator(double (*delayFunc)(double), double funcArg) {
     this->delayFunc = delayFunc;
     this->funcArg = funcArg;
-    ActivateAfter(delayFunc(30), DoAfter(Run)); // spusti generator znovu za
+    ActivateAfter(delayFunc(0), DoAfter(Run)); // spusti generator znovu za
     //Run();
 }
 // ............................................................ END generator.cpp ...................
 
 
 int main() {
-    Init(0, 67);
+    Init(0, 100);
     new Generator(Exp, 20);
     Run();
 

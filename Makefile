@@ -10,14 +10,13 @@ SRCS=$(wildcard simlite/*.cpp)
 OBJS=$(subst .cpp,.o,$(SRCS))
 
 run: all
-	./examples/obchod
 
 all: simlite.a examples
 
 clean:
 	rm -f simlite.a simlite/*.o
 
-examples: obchod
+examples: obchod sklad
 
 #$(BIN): $(OBJS) simlite.a
 #	$(CXX) $(LDFLAGS) -o $(BIN) $(BIN).o simlite.a $(LDLIBS)
@@ -33,6 +32,9 @@ simlite.a: $(filter-out $(BIN).o, $(OBJS))
 
 obchod: simlite.a examples/obchod.cpp
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) examples/obchod.cpp -o examples/obchod simlite.a
+
+sklad: simlite.a examples/sklad.cpp
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) examples/sklad.cpp -o examples/sklad simlite.a
 
 pack:
 	-rm *.zip || true
