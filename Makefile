@@ -35,6 +35,9 @@ sklad: simlite.a examples/sklad.cpp
 histogram: simlite.a unit_tests/histogram.cpp
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) unit_tests/histogram.cpp -o unit_tests/histogram simlite.a
 
+random: simlite.a unit_tests/random.cpp
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) unit_tests/random.cpp -o unit_tests/random simlite.a
+
 
 pack:
 	-rm *.zip || true

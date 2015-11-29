@@ -12,11 +12,6 @@
 using namespace std;
 #define DEBUG true
 
-//TODO
-inline double Exp(double mean) {return mean;}
-inline double Uniform(double min, double max) {return max;}
-inline double Normal(double mean, double variance) {return mean;}
-
 typedef std::function<void(void)> PtrMethod;
 
 extern double Time_t;

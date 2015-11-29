@@ -6,5 +6,6 @@
 #include "event.h"
 #include "facility.h"
 #include "histogram.h"
+#include "rng.h"
 
 #endif //SIMLITE_SIMLITE_H
