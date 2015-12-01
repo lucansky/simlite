@@ -31,12 +31,13 @@ private:
 
 
 	// output
+	string name;
 	std::vector<HistogramQu> histogramQu;
 	std::vector<double> duration_in_quComming;
 	std::vector<double> duration_in_quOutgoing;
 public:
 	void Output();
-	Facility(unsigned int capacity = 1);
+	Facility( unsigned int capacity = 1, string name = "No name");
 	void seize(Process &p, unsigned int itemSize = 1);
 	void release(Process &p, unsigned int itemSize = 1);
 	void SetItemsIn(int ModifyItemsIn);

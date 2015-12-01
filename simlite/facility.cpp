@@ -1,8 +1,8 @@
 #include "facility.h"
 
-Facility::Facility(unsigned int capacity) {
-	// TODO preco musi byt this-> a nie this. (prekladac pisal chybu)
+Facility::Facility(unsigned int capacity, string name) {
 	assert(capacity > 0);
+	this->name = name;
 	this->capacity = capacity;
 	itemsIn = 0;
 	// save for Output
@@ -80,6 +80,7 @@ void Facility::release(Process &p, unsigned int itemSize) {
 }
 
 void Facility::Output() {
+	cout << "\033[1;32m--------------- OUTPUT FROM " << this->name << "-----------------\033[0m\n";
 
 	histogramQu.push_back(HistogramQu{ Time_t - eventStart, itemsIn });
 	if (itemsIn != 0)
