@@ -21,7 +21,7 @@ depend: .depend
 
 .depend: $(SRCS)
 	rm -f ./.depend
-	$(CXX) -MM $^>>./.depend;
+	$(CXX) $(CXXFLAGS) -MM $^>>./.depend;
 
 simlite.a: $(filter-out $(BIN).o, $(OBJS))
 	ar -rcs $@ $(filter-out $(BIN).o, $(OBJS))

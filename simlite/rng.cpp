@@ -20,7 +20,7 @@ double Uniform(double low, double high) {
 }
 
 int UniformInt(int low, int high) {
-    std::uniform_real_distribution<int> dist(low, high);
+    std::uniform_int_distribution<int> dist(low, high);
     return dist(rng.getMT());
 }
 
