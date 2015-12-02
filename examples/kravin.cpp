@@ -18,8 +18,7 @@ public:
     }
 
     void Pasenie() {
-        ActivateAfter(Uniform(0, 900), DoAfter(ChodDojit));
-        //ActivateAfter(Exp(15*60), DoAfter(ChodDojit));
+        ActivateAfter(Exp(15*60), DoAfter(ChodDojit));
     }
 
     void ChodDojit() {
@@ -29,13 +28,20 @@ public:
     void Dojenie() {
         if (Uniform(0.0, 1.0) <= 0.1)
         {
-            ActivateAfter(Uniform(0,15), DoAfter(NaplnFlasu));
-            //ActivateAfter(Exp(15), DoAfter(NaplnFlasu));
+            /*
+            double tmp = Exp(15);
+            ActivateAfter(tmp, DoAfter(NaplnFlasu));
+            */
+            ActivateAfter(Exp(15), DoAfter(NaplnFlasu));
         }
         else
         {
-            ActivateAfter(Uniform(0,8), DoAfter(NaplnFlasu));
-            //ActivateAfter(Exp(8), DoAfter(NaplnFlasu));
+            /*
+            double tmp = Exp(8);
+            cout << "Hodnota exp: " << Exp(8) << "\n";
+            ActivateAfter(tmp, DoAfter(NaplnFlasu));
+            */
+            ActivateAfter(Exp(8), DoAfter(NaplnFlasu));
         }
     }
 
