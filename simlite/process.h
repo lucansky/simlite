@@ -10,6 +10,8 @@ public:
     PtrMethod ptrMethod;
     string name;
 public:
+	Process(string name = "No name");
+
     void Seize(Facility &f, PtrMethod nextMethod, unsigned int itemSize = 1);
 
     void ActivateAfter(double interval, PtrMethod nextMethod);
