@@ -18,10 +18,12 @@ void Facility::SetItemsIn(int ModifyItemsIn)
 	eventStart = Time_t;
 	itemsIn += ModifyItemsIn;
 	if (DEBUG)
-		cout << "In time: " << Time_t << " are in facaility: " << itemsIn << " items\n";
+		cout << "In " << this->name << " " << itemsIn << " items (modified with: " << ModifyItemsIn << ")" << "In time: " << Time_t << "\n";
 }
 
 void Facility::seize(Process &p, unsigned int itemSize) {
+	if (DEBUG)
+		std::cout << " vklada/obsadzuje linku " << name << " s " << itemSize << " items" << " v case " << Time_t << "\n";
 	if (capacity - itemsIn >= itemSize && quComming.empty())
 	{
 
@@ -30,17 +32,18 @@ void Facility::seize(Process &p, unsigned int itemSize) {
 		p.ActivateNext();
 
 		// ak prisli zasoby tak zavolaj dalsieho do skladu na zobratie
-		if (quOutgoing.front().itemSize <= itemsIn && !quOutgoing.empty())
-		{
-			duration_in_quOutgoing.push_back( Time_t - quOutgoing.front().waitStart );
-			SetItemsIn(-quOutgoing.front().itemSize);
-			quOutgoing.front().p->ActivateNext();
-			quOutgoing.pop();
-		}
+		if (!quOutgoing.empty())
+			if (quOutgoing.top().itemSize <= itemsIn)
+			{
+				duration_in_quOutgoing.push_back( Time_t - quOutgoing.top().waitStart);
+				SetItemsIn((-1)*quOutgoing.top().itemSize);
+				quOutgoing.top().p->ActivateNext();
+				quOutgoing.pop();
+			}
 	}
 	else
 	{
-		quComming.push(FacilityQuItem{ &p, Time_t, itemSize });
+		quComming.push(FacilityQuItem( &p, itemSize ));
 
 		// save for Output
 			if (maxQuComming < quComming.size())
@@ -50,27 +53,30 @@ void Facility::seize(Process &p, unsigned int itemSize) {
 }
 
 void Facility::release(Process &p, unsigned int itemSize) {
+	if (DEBUG)
+		std::cout << " bere/uvolnuje linku " << name << " s " << itemSize << " items" << " v case " << Time_t << "\n";
 	if (quOutgoing.empty() && itemsIn >= itemSize)
 	{
 
 		duration_in_quOutgoing.push_back(0);
-		SetItemsIn(-itemSize);
+		SetItemsIn((-1)*itemSize);
 		p.ActivateNext();
 
 		// ak sa uvolnilo tak zavolaj dalsieho do skladu na vlozenie
-		if (quComming.front().itemSize <= capacity - itemsIn && !quComming.empty())
-		{
-			double tmp = Time_t - quComming.front().waitStart;
-			duration_in_quComming.push_back( tmp );
-			SetItemsIn(quComming.front().itemSize);
-			quComming.front().p->ActivateNext();
-			quComming.pop();
-		}
+		if (!quComming.empty())
+			if (quComming.top().itemSize <= capacity - itemsIn)
+			{
+				double tmp = Time_t - quComming.top().waitStart;
+				duration_in_quComming.push_back( tmp );
+				SetItemsIn(quComming.top().itemSize);
+				quComming.top().p->ActivateNext();
+				quComming.pop();
+			}
 	}
 	else
 	{
 		// must waitng, queue not empty, or not enought itemsIn
-		quOutgoing.push(FacilityQuItem{ &p, Time_t, itemSize });
+		quOutgoing.push(FacilityQuItem( &p, itemSize ));
 
 		// save for Output
 			if (maxQuOutgoing < quOutgoing.size())
@@ -138,4 +144,9 @@ void Facility::Output() {
 			cout << "Facility used for " << (100* sum /(Time_t - Time_tStart))/capacity << "%\n";
 		cout << "Facility was " << 100* duration_of_empty /(Time_t - Time_tStart) << "% of time free\n"; // v percentach
 	}
+}
+
+bool operator<(const FacilityQuItem a, const FacilityQuItem b)
+{
+	return a.priority < b.priority;
 }

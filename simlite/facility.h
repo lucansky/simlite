@@ -5,29 +5,42 @@
 
 #include "process.h"
 
-typedef struct {
+class FacilityQuItem {
+public:
+	unsigned int priority;
 	Process *p;
 	double waitStart;
-	unsigned int itemSize;
-} FacilityQuItem;
+	int itemSize;
+
+	FacilityQuItem(Process *p, int itemSize, unsigned int priority = 1)
+	{
+		this->p = p;
+		this->priority = priority;
+		this->itemSize = itemSize;
+		this->waitStart = Time_t;
+	}
+};
+
+bool operator<(const FacilityQuItem a, const FacilityQuItem b);
+
 
 typedef struct {
 	double durationTime;
-	unsigned int itemsIn;
+	int itemsIn;
 } HistogramQu;
 
 class Facility {
 private:
 	double eventStart;
-	unsigned int itemsIn;
+	int itemsIn;
 	unsigned int capacity;
 
 	unsigned int maxQuComming;
-	std::queue<FacilityQuItem> quComming;  // waiting to seize
+	std::priority_queue<FacilityQuItem> quComming;  // waiting to seize
 
 	// + for store
 	unsigned int maxQuOutgoing;
-	std::queue<FacilityQuItem> quOutgoing; // waiting to release
+	std::priority_queue<FacilityQuItem> quOutgoing; // waiting to release
 
 
 	// output
@@ -42,5 +55,6 @@ public:
 	void release(Process &p, unsigned int itemSize = 1);
 	void SetItemsIn(int ModifyItemsIn);
 };
+
 
 #endif //SIMLITE_FACILITY_H
