@@ -12,7 +12,7 @@ all: simlite.a examples
 clean:
 	rm -f simlite.a simlite/*.o
 
-examples: obchod sklad
+examples: obchod sklad kravin
 
 #$(BIN): $(OBJS) simlite.a
 #	$(CXX) $(LDFLAGS) -o $(BIN) $(BIN).o simlite.a $(LDLIBS)
@@ -31,6 +31,9 @@ obchod: simlite.a examples/obchod.cpp
 
 sklad: simlite.a examples/sklad.cpp
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) examples/sklad.cpp -o examples/sklad simlite.a
+
+kravin: simlite.a examples/kravin.cpp
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) examples/kravin.cpp -o examples/kravin simlite.a
 
 histogram: simlite.a unit_tests/histogram.cpp
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) unit_tests/histogram.cpp -o unit_tests/histogram simlite.a
