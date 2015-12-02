@@ -9,6 +9,9 @@ class Histogram {
     std::string name;
     double min;
     double max;
+    int total_count;
+    int values_lower_than_limit;
+    int values_higher_than_limit;
 
 public:
     Histogram(std::string _name, double _min, double _max, int interval_count = 40);
