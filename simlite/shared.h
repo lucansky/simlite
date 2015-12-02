@@ -10,7 +10,7 @@
 #include <assert.h>
 #include <iomanip>        // std::setprecision(
 using namespace std;
-#define DEBUG true
+#define DEBUG false
 
 typedef std::function<void(void)> PtrMethod;
 
