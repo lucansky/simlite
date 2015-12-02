@@ -25,7 +25,7 @@ int UniformInt(int low, int high) {
 }
 
 double Exp(double mean) {
-    std::exponential_distribution<> dist(mean);
+    std::exponential_distribution<> dist(1/mean);
     return dist(rng.getMT());
 }
 
