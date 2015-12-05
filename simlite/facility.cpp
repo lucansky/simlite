@@ -21,7 +21,7 @@ void Facility::SetItemsIn(int ModifyItemsIn)
 		cout << "In " << this->name << " " << itemsIn << " items (modified with: " << ModifyItemsIn << ")" << "In time: " << Time_t << "\n";
 }
 
-void Facility::seize(Process &p, unsigned int itemSize) {
+void Facility::seize(Process &p, unsigned int itemSize, unsigned int priority) {
 	if (DEBUG)
 		std::cout << " vklada/obsadzuje linku " << name << " s " << itemSize << " items" << " v case " << Time_t << "\n";
 	if (capacity - itemsIn >= itemSize && quComming.empty())
@@ -43,7 +43,7 @@ void Facility::seize(Process &p, unsigned int itemSize) {
 	}
 	else
 	{
-		quComming.push(FacilityQuItem( &p, itemSize ));
+		quComming.push(FacilityQuItem( &p, itemSize, priority ));
 
 		// save for Output
 			if (maxQuComming < quComming.size())
@@ -52,7 +52,7 @@ void Facility::seize(Process &p, unsigned int itemSize) {
 	}
 }
 
-void Facility::release(Process &p, unsigned int itemSize) {
+void Facility::release(Process &p, unsigned int itemSize, unsigned int priority) {
 	if (DEBUG)
 		std::cout << " bere/uvolnuje linku " << name << " s " << itemSize << " items" << " v case " << Time_t << "\n";
 	if (quOutgoing.empty() && itemsIn >= itemSize)
@@ -76,7 +76,7 @@ void Facility::release(Process &p, unsigned int itemSize) {
 	else
 	{
 		// must waitng, queue not empty, or not enought itemsIn
-		quOutgoing.push(FacilityQuItem( &p, itemSize ));
+		quOutgoing.push(FacilityQuItem( &p, itemSize, priority ));
 
 		// save for Output
 			if (maxQuOutgoing < quOutgoing.size())

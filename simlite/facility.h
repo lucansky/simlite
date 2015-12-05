@@ -12,7 +12,7 @@ public:
 	double waitStart;
 	int itemSize;
 
-	FacilityQuItem(Process *p, int itemSize, unsigned int priority = 1)
+	FacilityQuItem(Process *p, int itemSize, unsigned int priority)
 	{
 		this->p = p;
 		this->priority = priority;
@@ -49,11 +49,11 @@ private:
 	std::vector<double> duration_in_quComming;
 	std::vector<double> duration_in_quOutgoing;
 public:
-	void Output();
 	Facility( unsigned int capacity = 1, string name = "No name");
-	void seize(Process &p, unsigned int itemSize = 1);
-	void release(Process &p, unsigned int itemSize = 1);
+	void seize(Process &p, unsigned int itemSize, unsigned int priority);
+	void release(Process &p, unsigned int itemSize, unsigned int priority);
 	void SetItemsIn(int ModifyItemsIn);
+	void Output();
 };
 
 

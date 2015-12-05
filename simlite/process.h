@@ -12,13 +12,13 @@ public:
 public:
 	Process(string name = "No name");
 
-    void Seize(Facility &f, PtrMethod nextMethod, unsigned int itemSize = 1);
+    void Seize(Facility &f, PtrMethod nextMethod, unsigned int itemSize = 1, unsigned int priority = 1);
 
     void ActivateAfter(double interval, PtrMethod nextMethod);
 
     void ActivateNext();
 
-    void Release(Facility &f, PtrMethod nextMethod, unsigned int itemSize = 1);
+    void Release(Facility &f, PtrMethod nextMethod, unsigned int itemSize = 1, unsigned int priority = 1);
 };
 
 #include "facility.h"
