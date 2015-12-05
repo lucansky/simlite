@@ -28,19 +28,10 @@ public:
     void Dojenie() {
         if (Uniform(0.0, 1.0) <= 0.1)
         {
-            /*
-            double tmp = Exp(15);
-            ActivateAfter(tmp, DoAfter(NaplnFlasu));
-            */
             ActivateAfter(Exp(15), DoAfter(NaplnFlasu));
         }
         else
         {
-            /*
-            double tmp = Exp(8);
-            cout << "Hodnota exp: " << Exp(8) << "\n";
-            ActivateAfter(tmp, DoAfter(NaplnFlasu));
-            */
             ActivateAfter(Exp(8), DoAfter(NaplnFlasu));
         }
     }
@@ -115,6 +106,7 @@ int main() {
 
     rampa.Output();
     dojicky.Output();
+    flasky.Output();
     nalozeni.Output();
     cout << "\033[1;32m--------------- ODVEZENYCH AUT " << auto1.odvezenych + auto2.odvezenych << "-----------------\033[0m\n";
 }
