@@ -35,18 +35,24 @@ private:
 	int itemsIn;
 	unsigned int capacity;
 
-	unsigned int maxQuComming;
 	std::priority_queue<FacilityQuItem> quComming;  // waiting to seize
 
 	// + for store
-	unsigned int maxQuOutgoing;
 	std::priority_queue<FacilityQuItem> quOutgoing; // waiting to release
 
 
 	// output
 	string name;
 	std::vector<HistogramQu> histogramQu;
+
+	unsigned int quCommingMax;
+	unsigned int quCommingCount;
+	unsigned int commingCount;
 	std::vector<double> duration_in_quComming;
+
+	unsigned int quOutgoingMax;
+	unsigned int quOutgoingCount;
+	unsigned int outgoingCount;
 	std::vector<double> duration_in_quOutgoing;
 public:
 	Facility( unsigned int capacity = 1, string name = "No name");
