@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-std=c++11 -g
+CXXFLAGS=-std=c++14 -g
 LDFLAGS=-I./simlite
 
 SRCS=$(wildcard simlite/*.cpp)
@@ -12,7 +12,7 @@ all: simlite.a examples
 clean:
 	rm -f simlite.a simlite/*.o
 
-examples: obchod sklad kravin
+examples: obchod sklad kravin prenos
 
 #$(BIN): $(OBJS) simlite.a
 #	$(CXX) $(LDFLAGS) -o $(BIN) $(BIN).o simlite.a $(LDLIBS)
@@ -34,6 +34,9 @@ sklad: simlite.a examples/sklad.cpp
 
 kravin: simlite.a examples/kravin.cpp
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) examples/kravin.cpp -o examples/kravin simlite.a
+
+prenos: simlite.a examples/prenos.cpp
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) examples/prenos.cpp -o examples/prenos simlite.a
 
 histogram: simlite.a unit_tests/histogram.cpp
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) unit_tests/histogram.cpp -o unit_tests/histogram simlite.a
