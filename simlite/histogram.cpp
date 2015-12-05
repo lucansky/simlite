@@ -5,7 +5,7 @@ Histogram::Histogram(std::string _name, double _min, double _max, int interval_c
 {
     interval_counts.resize(interval_count);
 
-    total_count = 0;
+    total_count_correct = 0;
     values_lower_than_limit = 0;
     values_higher_than_limit = 0;
 }
@@ -19,8 +19,6 @@ double Histogram::step() {
 }
 
 void Histogram::mark(double value) {
-    total_count++;
-
     if(value >= max) {
         values_higher_than_limit++;
         return;
@@ -30,6 +28,8 @@ void Histogram::mark(double value) {
         values_lower_than_limit++;
         return;
     }
+
+    total_count_correct++;
 
     int index = (value - min) / step();
 
@@ -51,6 +51,6 @@ void Histogram::Output() {
         std::cout << "Histogram out of range: [" << min << "..." << max << "]\n";
         std::cout << "    (below)                 (above)\n";
         std::cout << "  <--- "            << values_lower_than_limit <<
-                     " --|--" << total_count << "---|--- "  << values_higher_than_limit<< " -->     \n";
+                     " --|--" << total_count_correct << "---|--- "  << values_higher_than_limit<< " -->     \n";
     }
 }

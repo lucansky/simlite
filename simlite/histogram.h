@@ -9,7 +9,7 @@ class Histogram {
     std::string name;
     double min;
     double max;
-    int total_count;
+    int total_count_correct;
     int values_lower_than_limit;
     int values_higher_than_limit;
 
