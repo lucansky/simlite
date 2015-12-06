@@ -27,7 +27,7 @@ void Run()
 
 bool Calendar::Empty()
 {
-    return events.size()==0?true:false;
+    return events.size() == 0;
 }
 
 void Calendar::add(Event event)
@@ -50,8 +50,9 @@ void Calendar::CallNext()
 {
     if (events.size() > 0)
     {
-        // if end of simulation
         Time_t = events.top().at;
+
+        // if end of simulation
         if (events.top().process == NULL)
         {
             // remove all elements from queue
