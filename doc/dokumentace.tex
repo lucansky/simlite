@@ -37,7 +37,7 @@
 
 \section{Úvod}
 
-Táto práca popisuje implementáciu simulačného jadra vo forme programovej knižnice. Funkčnosť bude overená na ukážkových príkladoch.
+Táto práca popisuje implementáciu simulačného jadra (ďalej len simulátora) vo forme programovej knižnice. Funkčnosť bude overená na ukážkových príkladoch.
 %Úvod musí vysvětlit, proč se celá práce dělá a proč má uživatel výsledků váš dokument číst
 %(prosím, projekt sice děláte pro získání zápočtu v IMS, ale mohou existovat i jiné důvody). Případně, co se při čtení dozví.
 %
@@ -59,10 +59,17 @@ Táto práca popisuje implementáciu simulačného jadra vo forme programovej kn
 Práca vychádza zväčša zo študijnej opory\cite{opora} a existujúcej simulačnej knižnice SIMLIB\footnote{\url{http://www.fit.vutbr.cz/~peringer/SIMLIB/}}, ktorá slúžíla ako predloha pre rozhranie námi vytvorenej knižnice.
 
 \subsection{Validita modelu}
-Overenie funkčnosti simulátoru bude vykonané v ďalsích kapitolách na zvolených príkladoch prezentovaných na demonštračných cvičeniach
-predmetu IMS.
+Overenie správnej funkčnosti simulátoru bude vykonané v ďalsích kapitolách na zvolených príkladoch prezentovaných na demonštračných cvičeniach
+predmetu IMS. Uvedené modely su prebrané, t.j. nie je vykonaná validácia.
 
 \section{Rozbor tématu a použitých metod/technologií}
+Simulátor používa pre
+\cite[str.~36]{opora}
+
+\subsection{Použité postupy}
+
+\subsection{Pôvod metód}
+Rozhodli sme sa prebrať spôsob použitia modelu z knižnice SIMLIB, ktorá používa C++ ako 
 
 %Shrnutí všech podstatných faktů, které se týkají zkoumaného systému (co možná nejvěcnějším a technickým (ideálně formálně matematickým) přístupem, žádné literární příběhy). Podstatná fakta o systému musí být zdůvodněna a podepřena důvěryhodným zdrojem (vědecký článek, kniha, osobní měření a zjišťování). Pokud budete tvrdit, že ovce na pastvě sežere dvě kila trávy za den, musí existovat jiný (důvěryhodný) zdroj, který to potvrdí. Toto shrnutí určuje míru důvěryhodnosti vašeho modelu (nikdo nechce výsledky z nedůvěryhodného modelu). Pokud nebudou uvedeny zdroje faktů o vašem systému, hrozí ztráta bodů.
 %
@@ -71,13 +78,19 @@ predmetu IMS.
 %
 
 \section{Koncepce}
+Simulátor používa pre riadenie simulácie next-event algoritmus\cite[str.~39]{opora}.
 
 %Popište abstraktně architekturu vašeho programu, princip jeho činnosti, významné datové struktury a podobně.
 %Smyslem této kapitoly je podat informaci o programu bez použití názvů tříd, funkcí a podobně.
 %Tuto kapitolu by měl pochopit každý technik i bez informatického vzdělání.
 %Vyjadřovacími prostředky jsou vývojové diagramy, schémata, vzorce, algoritmy v pseudokódu a podobně. Musí zde být vysvětlena nosná myšlenka vašeho přístupu.
 
-\section{Architektura simulačního modelu/simulátoru}
+\section{Architektura simulátoru}
+Simulátor je implementovaný formou C++ knižnice ktorá je staticky prilinkovaná k užívateľom vytvorenému modulu obsahujúcu vlastnú činnosť (triedy, generátory, štatistiky).
+
+Užívateľ vo svojom module nadefinuje triedy pre transakcie. Každá trieda ďalej obsahuje metódy ktoré reprezentujú atomické operácie. Každá operácia plánuje podľa potreby budúce udalosti. Príkladom plánovania môže byť zákazník, ktorý sa podľa pravdepodobnostného rozloženia rozhoduje nad ďalšou akciou (pokus o obsadenie linky popr. zotrvanie v nákupoch).
+
+Kvôli chovaniu transakcie vo forme postupnosti operácií je nutné pri plánovaní udalosti poskytnúť metódu ktorou sa má pokračovať. V projekte sme využili lambda funkcie\cite{lambda}, ktorou nahradzujeme nutnosť práce s ukazateľmi na metódy.
 
 %Tato kapitola má různou důležitost pro různé typy zadání. U implementačních témat lze tady očekávat jádro dokumentace. Zde můžete využít zajímavého prvku ve vašem simulačním modelu a tady ho "prodat".
 %
