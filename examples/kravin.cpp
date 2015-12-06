@@ -6,7 +6,7 @@ Facility flasky(MAX_FLIAS, "flasky"); // vyrobene flasky cakajuce na nalozenie
 Facility dojicky(3, "Dojicky");
 Facility rampa(1, "Nakladaci rampa");
 
-Histogram nalozeni("Jak dlouho ceka auto na nalozeni", 10, 200); // Jak dlouho ceka auto na nalozeni
+Histogram nalozeni("Jak dlouho ceka auto na nalozeni", 10, 310, 20); // Jak dlouho ceka auto na nalozeni
 
 // TODO je implementovane? Stat nalozeni("Jak dlouho ceka auto na nalozeni");
 

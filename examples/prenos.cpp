@@ -4,7 +4,7 @@ Facility Linka(1, "Prenosova linka");
 Histogram hist("Doba v systemu", 100, 1600, 15);
 
 class Packet : public Process {
-    double time;
+    double time; // Time of entering system
     int priority;
 
 public:
@@ -14,17 +14,19 @@ public:
         SeizeNIC();
     }
 
+    // Queue up to network-interface-controller with given priority
     void SeizeNIC() {
-        Seize(Linka, DoAfter(WaitInLine));
+        Seize(Linka, DoAfter(WaitInLine), 1, priority);
     }
 
     void WaitInLine() {
-        ActivateAfter(Uniform(150, 250) + 5, DoAfter(DecideIfTransmissionSuccessful));    // prenos dat a dotaz na uspesnost
+        // Transmission of data + data validation delay
+        ActivateAfter(Uniform(150, 250) + 5, DoAfter(DecideIfTransmissionSuccessful));
     }
 
     void DecideIfTransmissionSuccessful() {
         if (Uniform(0.0, 1.0)<=0.01) {
-            // 1% chyba, opakovani cekani
+            // 1% error, retry if incorrect data received
 
             WaitInLine();
             return;
@@ -69,13 +71,12 @@ public:
 
         new Packet(priority);
     }
-
 };
 
 int main()
 {
     Init(0,1000*1000);
-    new PacketGenerator();
+    std::auto_ptr<PacketGenerator> generator (new PacketGenerator());
     Run();
     Linka.Output();
     hist.Output();
