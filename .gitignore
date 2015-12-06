@@ -4,3 +4,10 @@
 obchod
 .idea
 *.zip
+
+*.dSYM*
+.DS_Store
+
+examples/prenos
+examples/sklad
+examples/kravin
