@@ -76,7 +76,7 @@ public:
 int main()
 {
     Init(0,1000*1000);
-    std::auto_ptr<PacketGenerator> generator (new PacketGenerator());
+    PacketGenerator generator;
     Run();
     Linka.Output();
     hist.Output();

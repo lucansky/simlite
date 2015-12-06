@@ -48,46 +48,9 @@ public:
     }
 };
 
-
-// ............................................................ generator.h ...................
-//class Generator : public Process{
-//private:
-//    double (*delayFunc)(double);
-//    double funcArg;
-//public:
-//    //virtual void Behavior(); // potrebne aby tuto metodu definoval uzivatel
-//    void Behavior();
-//    Generator(double (*delayFunc)(double), double funcArg);
-//    void Run();
-//};
-//// ............................................................ END generator.h ...................
-//
-//
-//// priklad ako definovat Behavior generatora. Toto by mal definovat uzivatel
-//void Generator::Behavior() {
-//    new Zakaznik;
-//}
-//
-//
-//// ............................................................ generator.cpp ...................
-//void Generator::Run() {
-//    Behavior();
-//    ActivateAfter(delayFunc(funcArg), DoAfter(Run)); // spusti generator znovu za
-//    //ActivateAfter(20, DoAfter(Run)); // spusti generator znovu za
-//}
-//
-//Generator::Generator(double (*delayFunc)(double), double funcArg) {
-//    this->delayFunc = delayFunc;
-//    this->funcArg = funcArg;
-//    ActivateAfter(delayFunc(0), DoAfter(Run)); // spusti generator znovu za
-//    //Run();
-//}
-// ............................................................ END generator.cpp ...................
-
-
 int main() {
     Init(0, 100);
-    new Generator();
+    Generator generator;
     Run();
 
     pokladna.Output();

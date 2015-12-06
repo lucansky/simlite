@@ -26,7 +26,7 @@ public:
     }
 
     void Dojenie() {
-        if (Uniform(0.0, 1.0) <= 0.1)
+        if (Random() <= 0.1)
         {
             ActivateAfter(Exp(15), DoAfter(NaplnFlasu));
         }
@@ -88,7 +88,7 @@ public:
         odvezenych++;
         ActivateAfter(60, DoAfter(ObsadRampu));
     }
-} ;
+};
 
 int main() {
     Init(0,200*60); // 200 hodin casovy ramec
@@ -99,8 +99,7 @@ int main() {
         new Krava;
 
     // dve auta do systemu
-    Auto auto1;
-    Auto auto2;
+    Auto vehicles[2];
 
     Run();
 
@@ -108,5 +107,6 @@ int main() {
     dojicky.Output();
     flasky.Output();
     nalozeni.Output();
-    cout << "\033[1;32m--------------- ODVEZENYCH AUT " << auto1.odvezenych + auto2.odvezenych << "-----------------\033[0m\n";
+    cout << "\033[1;32m--------------- ODVEZENYCH AUT " << vehicles[0].odvezenych + vehicles[1].odvezenych
+            << "-----------------\033[0m\n";
 }
