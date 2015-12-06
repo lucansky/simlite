@@ -27,6 +27,9 @@ public:
 // Singleton with MT initialized, do not change.
 extern RNG rng;
 
+// Uniform generator in range [0.0..1.0]
+double Random();
+
 // WARNING: Uniform generator has both ends INCLUSIVE.
 // Uniform distribution, [low, high]
 double Uniform(double low, double high);

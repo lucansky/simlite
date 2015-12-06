@@ -14,6 +14,10 @@ RNG::~RNG() {
 // Source: https://channel9.msdn.com/Events/GoingNative/2013/rand-Considered-Harmful
 // at time 30:02
 
+double Random() {
+    return Uniform(0.0, 1.0);
+}
+
 double Uniform(double low, double high) {
     std::uniform_real_distribution<double> dist(low, high);
     return dist(rng.getMT());
