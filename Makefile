@@ -12,10 +12,7 @@ all: simlite.a examples
 clean:
 	rm -f simlite.a simlite/*.o
 
-examples: obchod sklad kravin prenos
-
-#$(BIN): $(OBJS) simlite.a
-#	$(CXX) $(LDFLAGS) -o $(BIN) $(BIN).o simlite.a $(LDLIBS)
+examples: kravin prenos
 
 depend: .depend
 
@@ -26,28 +23,19 @@ depend: .depend
 simlite.a: $(filter-out $(BIN).o, $(OBJS))
 	ar -rcs $@ $(filter-out $(BIN).o, $(OBJS))
 
-obchod: simlite.a examples/obchod.cpp
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) examples/obchod.cpp -o examples/obchod simlite.a
-
-sklad: simlite.a examples/sklad.cpp
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) examples/sklad.cpp -o examples/sklad simlite.a
-
 kravin: simlite.a examples/kravin.cpp
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) examples/kravin.cpp -o examples/kravin simlite.a
 
 prenos: simlite.a examples/prenos.cpp
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) examples/prenos.cpp -o examples/prenos simlite.a
 
-histogram: simlite.a unit_tests/histogram.cpp
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) unit_tests/histogram.cpp -o unit_tests/histogram simlite.a
-
-random: simlite.a unit_tests/random.cpp
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) unit_tests/random.cpp -o unit_tests/random simlite.a
-
 
 pack:
 	-rm *.zip || true
-	zip -r 01_xlucan01_xkello00.zip examples/ simlite/ Makefile README.md
+	cp doc/dokumentace.pdf dokumentace.pdf
+	zip -r 01_xlucan01_xkello00.zip examples/kravin.cpp examples/prenos.cpp simlite/*.cpp simlite/*.h Makefile README.md dokumentace.pdf
+
+	rm dokumentace.pdf
 
 include .depend
 
