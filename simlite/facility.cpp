@@ -1,3 +1,10 @@
+/**
+ *  SIMLite - simple discrete simulation core
+ *  Authors:
+ *     Adam Lucansky <xlucan01@stud.fit.vutbr.cz>
+ *     Tomas Kello <xkello00@stud.fit.vutbr.cz>
+ */
+
 #include "facility.h"
 
 Facility::Facility(unsigned int capacity, string name) {
@@ -23,7 +30,7 @@ void Facility::SetItemsIn(int ModifyItemsIn)
 		cout << "In " << this->name << " " << itemsIn << " items (modified with: " << ModifyItemsIn << ")" << "In time: " << Time_t << "\n";
 }
 
-void Facility::seize(Process &p, unsigned int itemSize, unsigned int priority) {
+void Facility::seize(Transaction &p, unsigned int itemSize, unsigned int priority) {
 	commingCount++;
 	if (DEBUG)
 		std::cout << " vklada/obsadzuje linku " << name << " s " << itemSize << " items" << " v case " << Time_t << "\n";
@@ -56,7 +63,7 @@ void Facility::seize(Process &p, unsigned int itemSize, unsigned int priority) {
 	}
 }
 
-void Facility::release(Process &p, unsigned int itemSize, unsigned int priority) {
+void Facility::release(Transaction &p, unsigned int itemSize, unsigned int priority) {
 	outgoingCount++;
 	if (DEBUG)
 		std::cout << " bere/uvolnuje linku " << name << " s " << itemSize << " items" << " v case " << Time_t << "\n";
@@ -102,8 +109,8 @@ void Facility::Output() {
 	if (!quOutgoing.empty())
 		cout << "\033[1;31mFacility has " << quOutgoing.size() << " records in quOutgoing\033[0m\n";
 
-	cout << "Incomming  " << commingCount << " in queue " << quCommingCount << " max queue " << quCommingMax << "\n";
-	cout << "Outcomming " << outgoingCount << " in queue " << quOutgoingCount << " max queue " << quOutgoingMax << "\n";
+	cout << "Incoming  " << commingCount << " in queue " << quCommingCount << " max queue " << quCommingMax << "\n";
+	cout << "Outcoming " << outgoingCount << " in queue " << quOutgoingCount << " max queue " << quOutgoingMax << "\n";
 
 	// imcomming queue
 	double sum=0, minTime=0, maxTime=0; int count=0, countFree = 0;
@@ -133,7 +140,7 @@ void Facility::Output() {
 		cout << "No one seize facility\n";
 	else
 	{
-		cout << "\nINCOMMING\n";
+		cout << "\nINCOMING\n";
 		if (count == 0)
 		{
 			cout << "No one was waiting in qu\n";

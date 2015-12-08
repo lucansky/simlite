@@ -1,21 +1,27 @@
+/**
+ *  SIMLite - simple discrete simulation core
+ *  Authors:
+ *     Adam Lucansky <xlucan01@stud.fit.vutbr.cz>
+ *     Tomas Kello <xkello00@stud.fit.vutbr.cz>
+ */
+
 #include "shared.h"
 
 #ifndef SIMLITE_EVENT_H
 #define SIMLITE_EVENT_H
 
-#include "process.h"
+#include "transaction.h"
 
 class Event {
-	//TODO pridat do kalendara miesto eventu
 	static int id_autoincrement;
 public:
 	int id;
 
 	double at;
 	int priority;
-	Process *process;
+	Transaction *transaction;
 public:
-	Event(double at, int priority, Process *process);
+	Event(double at, int priority, Transaction *transaction);
 
 };
 

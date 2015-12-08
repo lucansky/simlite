@@ -1,3 +1,10 @@
+/**
+ *  SIMLite - simple discrete simulation core
+ *  Authors:
+ *     Adam Lucansky <xlucan01@stud.fit.vutbr.cz>
+ *     Tomas Kello <xkello00@stud.fit.vutbr.cz>
+ */
+
 #include "histogram.h"
 
 Histogram::Histogram(std::string _name, double _min, double _max, int interval_count) :

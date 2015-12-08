@@ -3,7 +3,7 @@
 Facility Linka(1, "Prenosova linka");
 Histogram hist("Doba v systemu", 100, 1600, 15);
 
-class Packet : public Process {
+class Packet : public Transaction {
     double time; // Time of entering system
     int priority;
 
@@ -43,7 +43,7 @@ public:
     }
 };
 
-class PacketGenerator : public Process {
+class PacketGenerator : public Transaction {
 public:
     PacketGenerator() {
         Loop();
@@ -81,3 +81,4 @@ int main()
     Linka.Output();
     hist.Output();
 }
+

@@ -1,6 +1,12 @@
+/**
+ *  SIMLite - simple discrete simulation core
+ *  Authors:
+ *     Adam Lucansky <xlucan01@stud.fit.vutbr.cz>
+ *     Tomas Kello <xkello00@stud.fit.vutbr.cz>
+ */
+
 #include "calendar.h"
 
-// TODO: Put somewhere else
 Calendar calendar;
 double Time_t = 0;
 double Time_tStart = 0;
@@ -41,7 +47,7 @@ void Calendar::dump()
     for (int i = 0; i < size; ++i)
     {
         std::cout << events.top().at << " " << events.top().priority;
-        printf(" %p\n", events.top().process);
+        printf(" %p\n", events.top().transaction);
         events.pop();
     }
 }
@@ -53,13 +59,13 @@ void Calendar::CallNext()
         Time_t = events.top().at;
 
         // if end of simulation
-        if (events.top().process == NULL)
+        if (events.top().transaction == NULL)
         {
             // remove all elements from queue
             events = std::priority_queue<Event>();
             return;
         }
-        events.top().process->ActivateNext();
+        events.top().transaction->ActivateNext();
         events.pop();
     }
 }

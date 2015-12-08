@@ -1,3 +1,10 @@
+/**
+ *  SIMLite - simple discrete simulation core
+ *  Authors:
+ *     Adam Lucansky <xlucan01@stud.fit.vutbr.cz>
+ *     Tomas Kello <xkello00@stud.fit.vutbr.cz>
+ */
+
 #include "shared.h"
 
 #ifndef SIMLITE_HISTOGRAM_H

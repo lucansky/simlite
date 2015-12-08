@@ -1,4 +1,4 @@
-#include "../simlite/simlite.h"
+#include <simlite.h>
 #define MAX_FLIAS 20
 const int p_krav = 100;
 
@@ -6,12 +6,10 @@ Facility flasky(MAX_FLIAS, "flasky"); // vyrobene flasky cakajuce na nalozenie
 Facility dojicky(3, "Dojicky");
 Facility rampa(1, "Nakladaci rampa");
 
-Histogram nalozeni("Jak dlouho ceka auto na nalozeni", 10, 310, 20); // Jak dlouho ceka auto na nalozeni
-
-// TODO je implementovane? Stat nalozeni("Jak dlouho ceka auto na nalozeni");
+Histogram nalozeni("Jak dlouho ceka auto na nalozeni", 30, 330, 15); // Jak dlouho ceka auto na nalozeni
 
 // proces kravy
-class Krava : public Process {
+class Krava : public Transaction {
 public:
     Krava() {
         Pasenie();
@@ -46,7 +44,7 @@ public:
 } ;
 
 // proces auta nakladajiciho a odvazejiciho konvice
-class Auto : public Process {
+class Auto : public Transaction {
 private:
     unsigned int KonviceVAute;
     double Time;
@@ -91,7 +89,7 @@ public:
 };
 
 int main() {
-    Init(0,200*60); // 200 hodin casovy ramec
+    Init(0,200*60*10); // 200 hodin casovy ramec
     //Init(0,2000);
 
     // vygenerovat 100 krav do systemu (zustavaji tam)

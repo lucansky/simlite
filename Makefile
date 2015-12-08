@@ -1,13 +1,21 @@
 CXX=g++
-CXXFLAGS=-std=c++14 -g
+CXXFLAGS=-std=c++11 -g
 LDFLAGS=-I./simlite
 
 SRCS=$(wildcard simlite/*.cpp)
 OBJS=$(subst .cpp,.o,$(SRCS))
 
-run: all
+all: simlite.a examples info
 
-all: simlite.a examples
+run: all
+	./examples/kravin
+	./examples/prenos
+
+info:
+	@echo
+	@echo "Run examples with:"
+	@echo " ./examples/kravin"
+	@echo " ./examples/prenos"
 
 clean:
 	rm -f simlite.a simlite/*.o
@@ -29,7 +37,6 @@ kravin: simlite.a examples/kravin.cpp
 prenos: simlite.a examples/prenos.cpp
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) examples/prenos.cpp -o examples/prenos simlite.a
 
-
 pack:
 	-rm *.zip || true
 	cp doc/dokumentace.pdf dokumentace.pdf
@@ -38,4 +45,3 @@ pack:
 	rm dokumentace.pdf
 
 include .depend
-

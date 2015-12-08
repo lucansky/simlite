@@ -1,18 +1,25 @@
+/**
+ *  SIMLite - simple discrete simulation core
+ *  Authors:
+ *     Adam Lucansky <xlucan01@stud.fit.vutbr.cz>
+ *     Tomas Kello <xkello00@stud.fit.vutbr.cz>
+ */
+
 #include "shared.h"
 
 #ifndef SIMLITE_FACILITY_H
 #define SIMLITE_FACILITY_H
 
-#include "process.h"
+#include "transaction.h"
 
 class FacilityQuItem {
 public:
 	unsigned int priority;
-	Process *p;
+	Transaction *p;
 	double waitStart;
 	int itemSize;
 
-	FacilityQuItem(Process *p, int itemSize, unsigned int priority)
+	FacilityQuItem(Transaction *p, int itemSize, unsigned int priority)
 	{
 		this->p = p;
 		this->priority = priority;
@@ -56,8 +63,8 @@ private:
 	std::vector<double> duration_in_quOutgoing;
 public:
 	Facility( unsigned int capacity = 1, string name = "No name");
-	void seize(Process &p, unsigned int itemSize, unsigned int priority);
-	void release(Process &p, unsigned int itemSize, unsigned int priority);
+	void seize(Transaction &p, unsigned int itemSize, unsigned int priority);
+	void release(Transaction &p, unsigned int itemSize, unsigned int priority);
 	void SetItemsIn(int ModifyItemsIn);
 	void Output();
 };

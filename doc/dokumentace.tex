@@ -5,12 +5,17 @@
 \usepackage[top=2.5cm, left=2cm, text={17cm, 24cm}]{geometry}
 \usepackage[slovak]{babel}
 \usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+\usepackage[IL2]{fontenc}
 \usepackage{cmap}
 
 \usepackage{times}
 %\usepackage{natbib}
 \usepackage{url}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{xspace}
 
 \begin{document}
 
@@ -25,19 +30,25 @@
 \vspace{\stretch{0.382}}
 
 \LARGE{Modelovaní a simulacie\, -- \,technická správa} \\
-\Huge{Diskrétní simulátor řízený událostmi} % bug, nezobrazuje v PDF "fi"
+\Huge{Diskrétný simulátor riadený udalos\v{t}ami} % bug, nezobrazuje v PDF "fi"
 \vspace{\stretch{0.618}}
 
 \end{center}
 
-{\Large \today \hfill Adam Lučanský }
+{\Large
+\begin{tabularx}{\textwidth}{Xl}
+  \today & Adam Lučanský (xlucan01) \\
+         & Tomáš Kello (xkello00) \\
+\end{tabularx}
+}
+
 \end{titlepage}
 \newpage
 %\pagestyle{plain}
 
 \section{Úvod}
 
-Táto práca popisuje implementáciu simulačného jadra (ďalej len simulátora) vo forme programovej knižnice. Funkčnosť bude overená na ukážkových príkladoch.
+Táto práca popisuje implementáciu simulačného jadra (ďalej len simulátora) vo forme programovej knižnice vďaka ktorej je možné modelovať  systémy. Funkčnosť simulátoru bude porovnaná s výsledkami simulátoru SIMLIB\footnote{\url{http://www.fit.vutbr.cz/~peringer/SIMLIB/}} na ukážkových príkladoch.
 %Úvod musí vysvětlit, proč se celá práce dělá a proč má uživatel výsledků váš dokument číst
 %(prosím, projekt sice děláte pro získání zápočtu v IMS, ale mohou existovat i jiné důvody). Případně, co se při čtení dozví.
 %
@@ -56,20 +67,19 @@ Táto práca popisuje implementáciu simulačného jadra (ďalej len simulátora
 %    kapitola 1.2: V jakém prostředí a za jakých podmínek probíhalo experimentální ověřování validity modelu – pokud čtenář/zadavatel vaší zprávy neuvěří ve validitu vašeho modelu, obvykle vaši práci odmítne už v tomto okamžiku.
 
 \subsection{Zdroje faktov}
-Práca vychádza zväčša zo študijnej opory\cite{opora} a existujúcej simulačnej knižnice SIMLIB\footnote{\url{http://www.fit.vutbr.cz/~peringer/SIMLIB/}}, ktorá slúžíla ako predloha pre rozhranie námi vytvorenej knižnice.
+Práca vychádza zväčša zo študijnej opory\cite{opora} a existujúcej simulačnej knižnice SIMLIB, ktorá slúžíla ako predloha pre rozhranie námi vytvorenej knižnice.
 
 \subsection{Validita modelu}
-Overenie správnej funkčnosti simulátoru bude vykonané v ďalsích kapitolách na zvolených príkladoch prezentovaných na demonštračných cvičeniach
-predmetu IMS. Uvedené modely su prebrané, t.j. nie je vykonaná validácia.
+Overenie správnej funkčnosti simulátoru bude vykonané v ďalsích kapitolách na zvolených príkladoch prezentovaných na demonštračných cvičeniach predmetu IMS.
 
-\section{Rozbor tématu a použitých metod/technologií}
-Simulátor používa pre
-\cite[str.~36]{opora}
+\section{Rozbor témy a použitých metód/technologií}
+Simulátor pozostáva z transakcií, ktoré sú postupne generované\cite[str.~42]{opora}, pričom si môžu niesť aj ďalšie informácie\cite[str.~43]{opora}. Transakcia v systéme reprezentuje reálny objekt, ktorého chovanie je definované postupnostou elementárnych činností (zabranie obslužnej linky, čakanie \ldots)
 
 \subsection{Použité postupy}
+Zvolili sme C++ ako implementačný jazyk hlavne kvôli možnosti reprezentácie transakcií vo forme tried, nad ktorými je možné vykonávať operácie. Modulárne programovanie jazyka C++ umožnuje kooperatívny vývoj.
 
 \subsection{Pôvod metód}
-Rozhodli sme sa prebrať spôsob použitia modelu z knižnice SIMLIB, ktorá používa C++ ako 
+Rozhodli sme sa prebrať koncept simulátora z knižnice SIMLIB, ktorý umožnuje jednoduchú definíciu chovania. Ako generátor náhodných čísel sme sa rozhodli použiť C++ knižnicu \texttt{<random>} z ktorej sme použili Mersenne-Twister\cite[str.~20]{opora} generátor a taktiež triedy pre transformovanie náhodných čisel do pravdepodobnostných rozložení.
 
 %Shrnutí všech podstatných faktů, které se týkají zkoumaného systému (co možná nejvěcnějším a technickým (ideálně formálně matematickým) přístupem, žádné literární příběhy). Podstatná fakta o systému musí být zdůvodněna a podepřena důvěryhodným zdrojem (vědecký článek, kniha, osobní měření a zjišťování). Pokud budete tvrdit, že ovce na pastvě sežere dvě kila trávy za den, musí existovat jiný (důvěryhodný) zdroj, který to potvrdí. Toto shrnutí určuje míru důvěryhodnosti vašeho modelu (nikdo nechce výsledky z nedůvěryhodného modelu). Pokud nebudou uvedeny zdroje faktů o vašem systému, hrozí ztráta bodů.
 %
@@ -77,45 +87,89 @@ Rozhodli sme sa prebrať spôsob použitia modelu z knižnice SIMLIB, ktorá pou
 %    kapitola 2.2: Popis původu použitých metod/technologií (odkud byly získány (odkazy), zda-li jsou vytvořeny autorem) - převzaté části dokumentovat (specificky, pokud k nim přísluší nějaké autorské oprávnění/licence). Zdůvodnit potřebu vytvoření vlastních metod/nástrojů/algoritmů. Ve většině případů budete přebírat již navržené metody/algoritmy/definice/nástroje a je to pro školní projekt typické. Stejně tak je typické, že studenti chybně vymýšlí již hotové věci a dojdou k naprostému nesmyslu - je třeba toto nebezpečí eleminovat v tomto zdůvodnění.
 %
 
-\section{Koncepce}
-Simulátor používa pre riadenie simulácie next-event algoritmus\cite[str.~39]{opora}.
+\section{Koncept}
+Simulátor používa pre riadenie next-event algoritmus\cite[str.~39]{opora}. Kľúčovou komponentou simulátora je kalendár (prioritná fronta)\cite[str.34]{opora}, ktorý obsahuje záznamy o budúcich udalostiach.
+
+Záznamy sú z kalendára postupne podľa naplánovaného času udalosti, priority a poradia v akom boli vložené do kalendára vyberané a vykonávané ich obslužné funkcie. Vykonaná obslužná funkcia danej transakcie ďalej plánuje udalosti do kalendára. Táto činnosť prebieha dokým je dostupná aspoň jedna naplánovaná udalosť alebo modelový čas\cite[str.~41]{opora} nepredbehol koncový čas stanovený návrhárom.
 
 %Popište abstraktně architekturu vašeho programu, princip jeho činnosti, významné datové struktury a podobně.
 %Smyslem této kapitoly je podat informaci o programu bez použití názvů tříd, funkcí a podobně.
 %Tuto kapitolu by měl pochopit každý technik i bez informatického vzdělání.
 %Vyjadřovacími prostředky jsou vývojové diagramy, schémata, vzorce, algoritmy v pseudokódu a podobně. Musí zde být vysvětlena nosná myšlenka vašeho přístupu.
 
-\section{Architektura simulátoru}
-Simulátor je implementovaný formou C++ knižnice ktorá je staticky prilinkovaná k užívateľom vytvorenému modulu obsahujúcu vlastnú činnosť (triedy, generátory, štatistiky).
+\section{Architektúra simulátora}
+Simulátor je implementovaný formou C++ knižnice, ktorá je staticky prilinkovaná k užívateľom vytvorenému modulu obsahujúcu vlastnú činnosť (triedy, generátory, štatistiky).
 
-Užívateľ vo svojom module nadefinuje triedy pre transakcie. Každá trieda ďalej obsahuje metódy ktoré reprezentujú atomické operácie. Každá operácia plánuje podľa potreby budúce udalosti. Príkladom plánovania môže byť zákazník, ktorý sa podľa pravdepodobnostného rozloženia rozhoduje nad ďalšou akciou (pokus o obsadenie linky popr. zotrvanie v nákupoch).
+Užívateľ vo svojom module nadefinuje triedy pre transakcie. Každá trieda ďalej obsahuje metódy, ktoré reprezentujú atomické operácie. Každá operácia plánuje podľa potreby budúce udalosti. Príkladom plánovania môže byť zákazník, ktorý sa podľa pravdepodobnostného rozloženia rozhoduje nad ďalšou akciou (pokus o obsadenie linky popr. zotrvanie v nákupoch).
 
-Kvôli chovaniu transakcie vo forme postupnosti operácií je nutné pri plánovaní udalosti poskytnúť metódu ktorou sa má pokračovať. V projekte sme využili lambda funkcie\cite{lambda}, ktorou nahradzujeme nutnosť práce s ukazateľmi na metódy.
+Kvôli chovaniu transakcie vo forme postupnosti operácií je nutné pri plánovaní udalosti poskytnúť miesto v programe, od ktorého sa má pokračovať. V projekte sme využili lambda funkcie\cite{lambda}, ktorými nahradzujeme nutnosť práce s ukazateľmi na metódy.
 
 %Tato kapitola má různou důležitost pro různé typy zadání. U implementačních témat lze tady očekávat jádro dokumentace. Zde můžete využít zajímavého prvku ve vašem simulačním modelu a tady ho "prodat".
 %
 %    kapitola 4.1: Minimálně je nutno ukázat mapování abstraktního (koncept.) modelu do simulačního (resp. simulátoru). Např. které třídy odpovídají kterým procesům/veličinám a podobně.
 
-\section{Podstata simulačních experimentů a jejich průběh}
+\section{Podstata simulačných experimentov a ich priebeh}
+Pre overenie funkčnosti simulátoru sme sa rozhodli použiť nasledujúce dva modely.
 
 %Nezaměňujte pojmy testování a experimentování (důvod pro bodovou ztrátu)!!!
 %Zopakovat/shrnout co přesně chcete zjistit experimentováním a proč k tomu potřebujete model. Pokud experimentování nemá cíl, je celý projekt špatně. Je celkem přípustné u experimentu odhalit chybu v modelu, kterou na základě experimentu opravíte. Pokud se v některém experimentu nechová model podle očekávání, je nutné tento experiment důkladně prověřit a chování modelu zdůvodnit (je to součást simulačnické profese). Pokud model pro některé vstupy nemá důvěryhodné výsledky, je nutné to zdokumentovat. Pochopitelně model musí mít důvěryhodné výsledky pro většinu myslitelných vstupů.
 %
+\subsection{Kravín}
+
+Prvý model\cite[slide 22]{demo1}, ktorý je zámerne vybraný pre možnosť odtestovania velkej časti funkcionality obsahujúci:
+\begin{itemize}
+    \item Transakciu \texttt{krava} s počtom 100ks
+    \item Dve transakcie \texttt{auto}, ktoré sa starajú o odvoz mlieka z obslužných liniek
+    \item Obslužnú linku \texttt{dojičky} s kapacitou
+    \item Sklad na dočasné uloženie nádob po dobu kým sa naložia do auta
+\end{itemize}
+
+\subsection*{Porovnanie výsledkov}
+
+\begin{figure}[h!]
+    \includegraphics[width=12cm]{graf_kravin.eps}
+    \centering
+    \caption{Histogram reprezentujúci dobu čakania auta na naloženie po 2000 hodinách}
+\end{figure}
+
+\begin{table}[h!]
+\begin{center}
+  \begin{tabular}{ r | c | c }
+      & SIMLIB & Naša implementácia \\ \hline
+    Minimálny & 38.4  & 36.1 \\ \hline
+    Priemerný & 119.1 & 116.7 \\ \hline
+    Maximálny & 223.8 & 236.6 \\ \hline
+    \hline
+  \end{tabular}
+  \caption{Čas stráveny vo fronte nakladacej rampy}
+\end{center}
+\end{table}
+
+\subsection{Prenos dát}
+Druhý zvolený model reprezentuje prenos datových packetov po nespoľahlivom médiu\cite[slide 14]{demo1}.
+Systém modeluje jednu obslužnú linku pred ktorou sa hromadia packety na odoslanie.
+Packety môžu mať rôznu prioritu a taktiež môžu byť po odoslaní s istou pravdepodobnosťou zahodené a odoslané znovu.
+
+\subsection*{Porovnanie výsledkov}
+
+\begin{figure}[h!]
+    \includegraphics[width=12cm]{graf_prenos.eps}
+    \centering
+    \caption{Histogram reprezentujúci dobu strávenú transakciami v systéme po 16.7 minutách}
+\end{figure}
+
 %    kapitola 5.1: Naznačit postup experimentování – jakým způsobem hodláte prostřednictvím experimentů dojít ke svému cíli (v některých situacích je přípustné "to zkoušet tak dlouho až to vyjde", ale i ty musí mít nějaký organizovaný postup).
 %    kapitola 5.2: Dokumentace jednotlivých experimentů - souhrn vstupních podmínek a podmínek běhu simulace, komentovaný výpis výsledků, závěr experimentu a plán pro další experiment (např. v experimentu 341. jsem nastavil vstup x na hodnotu X, která je typická pro ... a vstup y na Y, protože chci zjistit chování systému v prostředi ... Po skončení běhu simulace byly získány tyto výsledky ..., kde je nejzajímavější hodnota sledovaných veličin a,b,c které se chovaly podle předpokladu a veličin d,e,f které ne. Lze z toho usoudit, že v modelu není správně implementováno chování v podmínkách ... a proto v následujících experimentech budu vycházet z modifikovaného modelu verze ... Nebo výsledky ukazují, že systém v těchto podmínkách vykazuje značnou citlivost na parametr x ... a proto bude dobré v dalších experimentech přesně prověřit chování systému na parametr x v intervalu hodnot ... až ...)
 %    kapitola 5.3: Závěry experimentů – bylo provedeno N experimentů v těchto situacích ... V průběhu experimentování byla odstraněna ... chyba v modelu. Z experimentů lze odvodit chování systémů s dostatečnou věrohodností a experimentální prověřování těchto ... situací již napřinese další výsledky, neboť ...
 %
 
-\section{Shrnutí simulačních experimentů a závěr}
-
+\section{Shrnutie simulačných experimentov a záver}
+Porovnaním výsledkov usudzujeme, že simulátor vykonáva požadovanú funkcionalitu korektne podľa priložených modelov prebraných z demoštračných cvičení, realizovaných simulačnou knižnicou SIMLIB.
 %Závěrem dokumentace se rozumí zhodnocení simulační studie a zhodnocení experimentů (např. Z výsledků experimentů vyplývá, že ... při předpokladu, že ... Validita modelu byla ověřena ... V rámci projektu vznikl nástroj ..., který vychází z ... a byl implementován v ...).
 %
 %    do závěru se nehodí psát poznámky osobního charakteru (např. práce na projektu mě bavila/nebavila, ...). Technická zpráva není osobní příběh autora.
 %    absolutně nikoho nezajímá, kolik úsilí jste projektu věnovali, důležitá je pouze kvalita zpracování simulátoru/modelu a obsažnost simulační studie (rozhodně ne např.: projekt jsem dělal ... hodin, což je víc než zadání předpokládalo. Program má ... řádků kódu). Pokud zdůrazňujete, že jste práci dělali významně déle než se čekalo, pak tím pouze demonstrujete vlastní neschopnost (to platí zejména v profesním životě).
 %    do závěru se velmi nehodí psát "auto-zhodnocení" kvality práce, to je výhradně na recenzentovi/hodnotiteli (např. v projektu jsem zcela splnil zadání a domnívám se, že můj model je bezchybný a výsledky taktéž). Statisticky častý je pravý opak autorova auto-zhodnocení. Pokud přesto chcete vyzdvihnout kvalitu svého díla (což je dobře), tak vaše výroky musí být naprosto nepopiratelně zdůvodněny a prokázány (např. pomocí jiného referenčního přístupu, matematického důkazu, analýzy, ...).
-\cite[str.~215]{opora}
-
-
 
 \newpage
 
